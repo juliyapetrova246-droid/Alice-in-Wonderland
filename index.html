@@ -15,7 +15,6 @@
       --gold-bright: #ffd97d;
       --gold-dark: #9e7328;
       --page-paper: #fbf6ea;
-      --page-shadow: #e6dcc6;
       --ink-dark: #1f1a17;
       --ink-muted: #574d42;
       --crimson: #8b1e24;
@@ -38,7 +37,6 @@
       position: relative;
     }
 
-    /* Cinematic Floating Magic Dust & Cards */
     .wonderland-sky {
       position: fixed;
       inset: 0;
@@ -61,7 +59,6 @@
       50% { transform: translateY(-35px) rotate(16deg) scale(1.18); opacity: 0.42; }
     }
 
-    /* Top Header Ribbon */
     .cinema-header {
       width: 100%;
       max-width: 960px;
@@ -106,7 +103,6 @@
       transform: translateY(-1px);
     }
 
-    /* 3D Book Stage */
     .book-stage {
       width: 100%;
       max-width: 960px;
@@ -115,11 +111,10 @@
       position: relative;
     }
 
-    /* CLOSED BOOK COVER */
     .book-cover-view {
       width: 100%;
       max-width: 560px;
-      min-height: 650px;
+      min-height: 640px;
       margin: 0 auto;
       background: var(--cover-leather);
       border-radius: 12px 26px 26px 12px;
@@ -129,7 +124,7 @@
         0 25px 60px rgba(0,0,0,0.75),
         inset 0 0 60px rgba(0,0,0,0.65);
       border: 3px solid var(--gold-dark);
-      padding: 36px 28px;
+      padding: 34px 26px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -144,11 +139,10 @@
       transform: translateY(-6px) rotateY(-4deg);
       box-shadow: 
         -14px 0 0 #0a1712,
-        0 30px 70px rgba(230, 194, 122, 0.25),
+        0 30px 70px rgba(230, 194, 122, 0.28),
         inset 0 0 60px rgba(0,0,0,0.65);
     }
 
-    /* Spine groove */
     .book-cover-view::before {
       content: "";
       position: absolute;
@@ -159,13 +153,12 @@
       background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(255,217,125,0.25), rgba(0,0,0,0.6));
     }
 
-    /* Gold filigree inner frame */
     .gold-frame {
       width: 100%;
       height: 100%;
       border: 2px solid var(--gold-foil);
       border-radius: 8px 18px 18px 8px;
-      padding: 28px 22px;
+      padding: 26px 20px;
       margin-left: 12px;
       display: flex;
       flex-direction: column;
@@ -185,7 +178,7 @@
 
     .cover-title {
       font-family: 'Cinzel Decorative', serif;
-      font-size: 2.35rem;
+      font-size: 2.3rem;
       font-weight: 900;
       line-height: 1.22;
       background: linear-gradient(180deg, #fff3c4 0%, #e6c27a 55%, #b5852a 100%);
@@ -197,15 +190,15 @@
 
     .cover-script {
       font-family: 'Great Vibes', cursive;
-      font-size: 2.1rem;
+      font-size: 2.05rem;
       color: var(--gold-foil);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .cover-emblem {
-      width: 170px;
-      height: 170px;
-      margin: 8px auto;
+      width: 165px;
+      height: 165px;
+      margin: 6px auto;
       filter: drop-shadow(0 0 16px rgba(255, 217, 125, 0.35));
       animation: pulseGlow 4s infinite ease-in-out;
     }
@@ -235,7 +228,6 @@
       box-shadow: 0 0 28px rgba(255, 217, 125, 0.7);
     }
 
-    /* OPEN BOOK SPREAD */
     .open-book-spread {
       display: none;
       width: 100%;
@@ -247,7 +239,7 @@
       border: 8px solid #163a2c;
       outline: 2px solid var(--gold-foil);
       box-shadow: 0 28px 70px rgba(0,0,0,0.85);
-      min-height: 620px;
+      min-height: 610px;
       grid-template-columns: 1fr 1fr;
       position: relative;
       overflow: hidden;
@@ -264,7 +256,6 @@
       to { opacity: 1; transform: scale(1) rotateX(0deg); }
     }
 
-    /* Page flip transition animation */
     .page-flipping {
       animation: flipPageEffect 0.55s ease-in-out;
     }
@@ -276,7 +267,7 @@
     }
 
     .page-left, .page-right {
-      padding: 36px 34px;
+      padding: 34px 32px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -297,8 +288,8 @@
 
     .illustration-frame {
       width: 100%;
-      max-width: 310px;
-      height: 290px;
+      max-width: 300px;
+      height: 280px;
       background: #fffdf9;
       border: 2px solid #cbb994;
       border-radius: 14px;
@@ -340,7 +331,6 @@
       letter-spacing: 0.1em;
     }
 
-    /* Right Page Content */
     .chapter-kicker {
       font-family: 'Cinzel Decorative', serif;
       font-size: 0.9rem;
@@ -352,7 +342,7 @@
 
     .chapter-heading {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 2.25rem;
+      font-size: 2.2rem;
       font-weight: 700;
       color: var(--emerald);
       line-height: 1.15;
@@ -361,3 +351,18 @@
 
     .drop-cap::first-letter {
       font-family: 'Cinzel Decorative', serif;
+      font-size: 3.1rem;
+      float: left;
+      line-height: 0.85;
+      padding-right: 10px;
+      padding-top: 4px;
+      color: var(--crimson);
+    }
+
+    .story-synopsis {
+      font-size: 1.02rem;
+      color: var(--ink-dark);
+      margin-bottom: 18px;
+    }
+
+    .skills-box {
