@@ -1,207 +1,363 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alice in Wonderland · Interactive English Lab</title>
+  <title>Alice’s Adventures in Wonderland · Interactive Storybook</title>
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-room: radial-gradient(circle at 50% 35%, #2b1d38 0%, #120b1c 65%, #07040c 100%);
+      --cover-leather: linear-gradient(135deg, #163a2c 0%, #0d261c 50%, #1b112c 100%);
+      --gold-foil: #e6c27a;
+      --gold-bright: #ffd97d;
+      --gold-dark: #9e7328;
+      --page-paper: #fbf6ea;
+      --page-shadow: #e6dcc6;
+      --ink-dark: #1f1a17;
+      --ink-muted: #574d42;
+      --crimson: #8b1e24;
+      --emerald: #164232;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: #f7f3e8;
-      color: #1f2937;
-      line-height: 1.6;
-      padding: 28px 16px 60px;
-      max-width: 1040px;
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg-room);
+      color: var(--ink-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px 40px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Cinematic Floating Magic Dust & Cards */
+    .wonderland-sky {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-relic {
+      position: absolute;
+      color: var(--gold-bright);
+      opacity: 0.25;
+      filter: drop-shadow(0 0 8px rgba(255, 217, 125, 0.6));
+      animation: levitate 12s infinite ease-in-out;
+      user-select: none;
+    }
+
+    @keyframes levitate {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.18; }
+      50% { transform: translateY(-35px) rotate(16deg) scale(1.18); opacity: 0.42; }
+    }
+
+    /* Top Header Ribbon */
+    .cinema-header {
+      width: 100%;
+      max-width: 960px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      z-index: 2;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--gold-foil);
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    }
+
+    .nav-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .top-pill-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(230, 194, 122, 0.4);
+      color: var(--gold-bright);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-family: 'Lora', serif;
+      font-size: 0.84rem;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: all 0.25s ease;
+    }
+
+    .top-pill-btn:hover {
+      background: rgba(230, 194, 122, 0.22);
+      transform: translateY(-1px);
+    }
+
+    /* 3D Book Stage */
+    .book-stage {
+      width: 100%;
+      max-width: 960px;
+      perspective: 2200px;
+      z-index: 2;
+      position: relative;
+    }
+
+    /* CLOSED BOOK COVER */
+    .book-cover-view {
+      width: 100%;
+      max-width: 560px;
+      min-height: 650px;
       margin: 0 auto;
-    }
-    .hero {
-      background: #fffdf9;
-      border-radius: 22px;
-      padding: 40px 28px;
+      background: var(--cover-leather);
+      border-radius: 12px 26px 26px 12px;
+      box-shadow: 
+        -14px 0 0 #0a1712,
+        -18px 8px 25px rgba(0,0,0,0.8),
+        0 25px 60px rgba(0,0,0,0.75),
+        inset 0 0 60px rgba(0,0,0,0.65);
+      border: 3px solid var(--gold-dark);
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
       text-align: center;
-      box-shadow: 0 12px 30px rgba(45, 35, 20, 0.08);
-      border: 2px solid #d6cbb5;
-      margin-bottom: 28px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.6s ease;
     }
-    .ornament { font-size: 1.35rem; letter-spacing: 0.5rem; color: #1b4332; margin-bottom: 12px; }
-    .ornament .red { color: #7f1d1d; }
-    .hero h1 { font-family: Georgia, serif; font-size: 2.3rem; color: #1b4332; margin-bottom: 12px; }
-    .hero p { font-size: 1.05rem; color: #57534e; max-width: 680px; margin: 0 auto 22px; }
-    .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 22px; }
-    .tag { background: #f7f3e8; border: 1px solid #d6cbb5; padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
-    .quote-box { background: #faf5e8; border: 1px solid #e2d8c3; padding: 16px; max-width: 660px; margin: 0 auto; border-radius: 12px; }
-    .quote-en { font-family: Georgia, serif; font-style: italic; font-size: 1.08rem; color: #7f1d1d; margin-bottom: 4px; }
-    .quote-ru { font-size: 0.9rem; color: #57534e; margin-bottom: 12px; }
-    .mini-btn { background: #fff; border: 1px solid #d6cbb5; padding: 6px 12px; border-radius: 8px; font-size: 0.83rem; font-weight: 600; cursor: pointer; margin: 0 4px; }
-    .mini-btn:hover { background: #fef3c7; border-color: #d97706; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-    .card {
-      background: #fffdf9;
+
+    .book-cover-view:hover {
+      transform: translateY(-6px) rotateY(-4deg);
+      box-shadow: 
+        -14px 0 0 #0a1712,
+        0 30px 70px rgba(230, 194, 122, 0.25),
+        inset 0 0 60px rgba(0,0,0,0.65);
+    }
+
+    /* Spine groove */
+    .book-cover-view::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 22px;
+      width: 4px;
+      background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(255,217,125,0.25), rgba(0,0,0,0.6));
+    }
+
+    /* Gold filigree inner frame */
+    .gold-frame {
+      width: 100%;
+      height: 100%;
+      border: 2px solid var(--gold-foil);
+      border-radius: 8px 18px 18px 8px;
+      padding: 28px 22px;
+      margin-left: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: inset 0 0 20px rgba(230, 194, 122, 0.15);
+    }
+
+    .flourish-top {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      color: var(--gold-bright);
+      letter-spacing: 0.08em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+
+    .cover-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 2.35rem;
+      font-weight: 900;
+      line-height: 1.22;
+      background: linear-gradient(180deg, #fff3c4 0%, #e6c27a 55%, #b5852a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.8));
+      margin: 10px 0;
+    }
+
+    .cover-script {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.1rem;
+      color: var(--gold-foil);
+      margin-bottom: 12px;
+    }
+
+    .cover-emblem {
+      width: 170px;
+      height: 170px;
+      margin: 8px auto;
+      filter: drop-shadow(0 0 16px rgba(255, 217, 125, 0.35));
+      animation: pulseGlow 4s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(255, 217, 125, 0.3)); }
+      50% { transform: scale(1.04); filter: drop-shadow(0 0 24px rgba(255, 217, 125, 0.65)); }
+    }
+
+    .open-book-btn {
+      background: linear-gradient(135deg, #e6c27a 0%, #b5852a 100%);
+      color: #140d07;
+      border: 2px solid #fff3c4;
+      padding: 14px 32px;
+      border-radius: 999px;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      transition: all 0.3s ease;
+    }
+
+    .open-book-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 28px rgba(255, 217, 125, 0.7);
+    }
+
+    /* OPEN BOOK SPREAD */
+    .open-book-spread {
+      display: none;
+      width: 100%;
+      background: var(--page-paper);
+      background-image: 
+        linear-gradient(to right, rgba(0,0,0,0.06) 0%, transparent 4%, transparent 48%, rgba(0,0,0,0.16) 50%, transparent 52%, transparent 96%, rgba(0,0,0,0.06) 100%),
+        radial-gradient(circle at center, #fffdf8 0%, #f3ead6 100%);
       border-radius: 18px;
-      padding: 24px;
-      border: 1px solid #d6cbb5;
-      box-shadow: 0 6px 16px rgba(45, 35, 20, 0.05);
+      border: 8px solid #163a2c;
+      outline: 2px solid var(--gold-foil);
+      box-shadow: 0 28px 70px rgba(0,0,0,0.85);
+      min-height: 620px;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+    }
+
+    .open-book-spread.visible {
+      display: grid;
+      animation: bookAppear 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes bookAppear {
+      from { opacity: 0; transform: scale(0.92) rotateX(8deg); }
+      to { opacity: 1; transform: scale(1) rotateX(0deg); }
+    }
+
+    /* Page flip transition animation */
+    .page-flipping {
+      animation: flipPageEffect 0.55s ease-in-out;
+    }
+
+    @keyframes flipPageEffect {
+      0% { opacity: 1; transform: rotateY(0deg); }
+      45% { opacity: 0.25; transform: rotateY(-14deg) scale(0.98); }
+      100% { opacity: 1; transform: rotateY(0deg) scale(1); }
+    }
+
+    .page-left, .page-right {
+      padding: 36px 34px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      position: relative;
     }
-    .card.locked { background: #f4efe4; opacity: 0.85; }
-    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .chapter { font-family: Georgia, serif; font-size: 0.88rem; font-weight: 700; color: #7f1d1d; }
-    .badge { font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
-    .badge.open { background: #dcfce7; color: #166534; }
-    .badge.soon { background: #e7e2d5; color: #6b645c; }
-    .icon { font-size: 2rem; margin-bottom: 8px; }
-    .card h3 { font-family: Georgia, serif; font-size: 1.25rem; margin-bottom: 8px; }
-    .card p { font-size: 0.94rem; color: #57534e; margin-bottom: 16px; }
-    .pill { display: inline-block; font-size: 0.8rem; background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 8px; margin-bottom: 16px; font-weight: 600; }
-    .btn { display: block; width: 100%; text-align: center; padding: 12px; border-radius: 10px; font-weight: 700; text-decoration: none; }
-    .btn-open { background: #1b4332; color: #fff; }
-    .btn-open:hover { background: #122e22; }
-    .btn-lock { background: #e5dec9; color: #8c8273; pointer-events: none; }
-    footer { text-align: center; margin-top: 44px; padding-top: 20px; border-top: 1px solid #d6cbb5; font-size: 0.9rem; color: #57534e; }
-  </style>
-</head>
-<body>
-  <header class="hero">
-    <div class="ornament">♠ <span class="red">♥</span> ♣ <span class="red">♦</span></div>
-    <h1>Alice in Wonderland · Interactive Lab</h1>
-    <p>Волшебная языковая лаборатория по аудиодраме BBC Learning English. Слушай голоса британских актёров, открывай секреты грамматики и озвучивай героев Страны чудес!</p>
-    <div class="tags">
-      <span class="tag">🎧 Оригинальные голоса BBC</span>
-      <span class="tag">📖 10 глав приключения</span>
-      <span class="tag">🎓 Grammar Studio</span>
-      <span class="tag">🎙 Запись голоса</span>
-      <span class="tag">🇷🇺 Подсказки на русском</span>
-    </div>
-    <div class="quote-box">
-      <div class="quote-en" id="qEn">“Curiouser and curiouser!”</div>
-      <div class="quote-ru" id="qRu">«Всё страньше и страньше!» — Алиса</div>
-      <button class="mini-btn" onclick="speakQ()">🔊 Послушать</button>
-      <button class="mini-btn" onclick="nextQ()">✨ Другая цитата</button>
-    </div>
-  </header>
 
-  <main class="grid">
-    <article class="card">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER I · PART 1</span><span class="badge open">Открыто</span></div>
-        <div class="icon">🐇</div>
-        <h3>Down the Rabbit Hole</h3>
-        <p>Алиса замечает говорящего Белого Кролика с карманными часами и падает в глубокую нору.</p>
-        <div class="pill">🎧 Listening · Vocabulary · Speaking</div>
-      </div>
-      <a href="part-1/" class="btn btn-open">Войти в главу 1 →</a>
-    </article>
-
-    <article class="card">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER II · PART 2</span><span class="badge open">Открыто</span></div>
-        <div class="icon">💧</div>
-        <h3>The Pool of Tears</h3>
-        <p>Волшебные пирожки меняют рост Алисы — она плачет целое море слёз, в котором сама же и плывёт.</p>
-        <div class="pill">🎧 Listening · Vocabulary · Speaking</div>
-      </div>
-      <a href="part-2/" class="btn btn-open">Войти в главу 2 →</a>
-    </article>
-
-    <article class="card">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER III · PART 3</span><span class="badge open">Открыто</span></div>
-        <div class="icon">🦤</div>
-        <h3>The Caucus-race</h3>
-        <p>Странный забег по кругу без правил, в котором побеждают все, а призы раздаёт сама Алиса.</p>
-        <div class="pill">🎓 Grammar: First Conditional</div>
-      </div>
-      <a href="part-3/" class="btn btn-open">Войти в главу 3 →</a>
-    </article>
-
-    <article class="card locked">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER IV · PART 4</span><span class="badge soon">Скоро</span></div>
-        <div class="icon">🏠</div>
-        <h3>The White Rabbit's House</h3>
-        <p>Алиса снова вырастает так сильно, что заполняет собой целый домик Белого Кролика.</p>
-      </div>
-      <span class="btn btn-lock">Глава готовится 🔒</span>
-    </article>
-
-    <article class="card locked">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER V · PART 5</span><span class="badge soon">Скоро</span></div>
-        <div class="icon">🍄</div>
-        <h3>Advice from a Caterpillar</h3>
-        <p>Философская беседа с Синей Гусеницей и тайна волшебного гриба, меняющего рост.</p>
-      </div>
-      <span class="btn btn-lock">Глава готовится 🔒</span>
-    </article>
-
-    <article class="card locked">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER VI · PART 6</span><span class="badge soon">Скоро</span></div>
-        <div class="icon">😸</div>
-        <h3>Pig and Pepper</h3>
-        <p>Переполох на кухне Герцогини и первая встреча с загадочно улыбающимся Чеширским Котом.</p>
-      </div>
-      <span class="btn btn-lock">Глава готовится 🔒</span>
-    </article>
-
-    <article class="card locked">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER VII · PART 7</span><span class="badge soon">Скоро</span></div>
-        <div class="icon">🫖</div>
-        <h3>A Mad Tea-Party</h3>
-        <p>Безумное чаепитие со Шляпником и Мартовским Зайцем, где время застыло на шести часах.</p>
-      </div>
-      <span class="btn btn-lock">Глава готовится 🔒</span>
-    </article>
-
-    <article class="card locked">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER VIII · PART 8</span><span class="badge soon">Скоро</span></div>
-        <div class="icon">🦩</div>
-        <h3>Croquet with the Queen</h3>
-        <p>Королевский крокет, где вместо молотков — розовые фламинго, а вместо мячей — живые ежи.</p>
-      </div>
-      <span class="btn btn-lock">Глава готовится 🔒</span>
-    </article>
-
-    <article class="card locked">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER IX · PART 9</span><span class="badge soon">Скоро</span></div>
-        <div class="icon">🥧</div>
-        <h3>Who Stole the Tarts?</h3>
-        <p>Большой королевский суд над Валетом Червей по делу о пропавших праздничных пирогах.</p>
-      </div>
-      <span class="btn btn-lock">Глава готовится 🔒</span>
-    </article>
-
-    <article class="card locked">
-      <div>
-        <div class="card-top"><span class="chapter">CHAPTER X · PART 10</span><span class="badge soon">Скоро</span></div>
-        <div class="icon">👑</div>
-        <h3>Alice's Evidence</h3>
-        <p>Финал приключения: смелые слова Алисы на суде и пробуждение из Страны чудес.</p>
-      </div>
-      <span class="btn btn-lock">Глава готовится 🔒</span>
-    </article>
-  </main>
-
-  <footer>
-    <p>♠ ♥ ♣ ♦ · Alice in Wonderland Interactive Lab · Based on BBC Learning English Drama · Keep curious! ♦ ♣ ♥ ♠</p>
-  </footer>
-
-  <script>
-    const qs = [
-      { en: "“Curiouser and curiouser!”", ru: "«Всё страньше и страньше!» — Алиса" },
-      { en: "“Everybody has won, and everyone must have prizes!”", ru: "«Победили все, и каждый должен получить приз!» — Птица Додо" },
-      { en: "“We're all mad here. I'm mad. You're mad.”", ru: "«Мы все здесь не в своём уме. И я, и ты.» — Чеширский Кот" },
-      { en: "“Who in the world am I? Ah, that's the great puzzle!”", ru: "«Кто же я на свете? Ах, вот в чём главная загадка!» — Алиса" }
-    ];
-    let i = 0;
-    function nextQ() {
-      i = (i + 1) % qs.length;
-      document.getElementById("qEn").textContent = qs[i].en;
-      document.getElementById("qRu").textContent = qs[i].ru;
+    .page-left {
+      border-right: 1px solid rgba(139, 115, 85, 0.25);
+      align-items: center;
+      text-align: center;
     }
+
+    .page-ornament {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.7rem;
+      color: var(--gold-dark);
+    }
+
+    .illustration-frame {
+      width: 100%;
+      max-width: 310px;
+      height: 290px;
+      background: #fffdf9;
+      border: 2px solid #cbb994;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 20px rgba(180, 140, 80, 0.14), 0 8px 20px rgba(0,0,0,0.06);
+      position: relative;
+    }
+
+    .illustration-frame::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px dashed #b5852a;
+      border-radius: 9px;
+      pointer-events: none;
+    }
+
+    .illustration-frame svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .quote-caption {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--crimson);
+      max-width: 320px;
+    }
+
+    .page-number {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* Right Page Content */
+    .chapter-kicker {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--crimson);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .chapter-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: var(--emerald);
+      line-height: 1.15;
+      margin-bottom: 14px;
+    }
+
+    .drop-cap::first-letter {
+      font-family: 'Cinzel Decorative', serif;
