@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alice in Wonderland · Interactive English Lab</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #f4f7fb 0%, #eaeef7 100%);
+      --card-bg: #ffffff;
+      --primary: #3b5998;
+      --primary-hover: #2d4373;
+      --accent: #d97706;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border-soft: #e2e8f0;
+      --badge-open-bg: #dcfce7;
+      --badge-open-text: #166534;
+      --badge-soon-bg: #f1f5f9;
+      --badge-soon-text: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .hero {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 36px 28px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+      border: 1px solid var(--border-soft);
+      margin-bottom: 32px;
+    }
+
+    .suits {
+      font-size: 1.2rem;
+      letter-spacing: 0.4rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      opacity: 0.85;
+    }
+
+    .suits span.red {
+      color: #dc2626;
+    }
+
+    .hero h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 10px;
+    }
+
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 20px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .tag {
+      background: #f8fafc;
+      border: 1px solid var(--border-soft);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    /* Section Title */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 18px;
+      padding: 0 4px;
+    }
+
+    .section-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .section-header span {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Grid of episodes */
+    .episodes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 22px;
+      border: 1px solid var(--border-soft);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card.active:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.09);
+      border-color: #cbd5e1;
+    }
+
+    .card.locked {
+      background: #f8fafc;
+      opacity: 0.85;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .part-num {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+    }
+
+    .badge {
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .badge.open {
+      background: var(--badge-open-bg);
+      color: var(--badge-open-text);
+    }
+
+    .badge.soon {
+      background: var(--badge-soon-bg);
+      color: var(--badge-soon-text);
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.94rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .grammar-pill {
+      display: inline-block;
+      font-size: 0.8rem;
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-disabled {
+      background: #e2e8f0;
+      color: #94a3b8;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 44px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 {
+        font-size: 1.65rem;
+      }
+      .section-header {
+        flex-direction: column;
+        gap: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Hero Header -->
+    <header class="hero">
+      <div class="suits">♠ <span class="red">♥</span> ♣ <span class="red">♦</span></div>
+      <h1>🐇 Alice in Wonderland · Interactive Lab</h1>
+      <p class="subtitle">
+        Интерактивный курс английского языка по аудиодраме BBC Learning English. 
+        Слушай настоящих актёров, тренируй грамматику, пиши диктанты и озвучивай героев!
+      </p>
+      <div class="tags">
+        <span class="tag">🎧 Real BBC Voices</span>
+        <span class="tag">📚 10 Episodes</span>
+        <span class="tag">🎓 Grammar Studio</span>
+        <span class="tag">🎙 Speaking & Shadowing</span>
+        <span class="tag">🇷🇺 Подсказки внутри</span>
+      </div>
+    </header>
+
+    <!-- Episodes Section -->
+    <div class="section-header">
+      <h2>Все эпизоды приключения · All Episodes</h2>
+      <span>Выбери главу, чтобы начать урок</span>
+    </div>
+
+    <main class="episodes-grid">
+      <!-- Part 1 -->
+      <article class="card active">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 1</span>
+            <span class="badge open">Готово · Open</span>
+          </div>
+          <h3>Down the Rabbit Hole</h3>
+          <p>Алиса видит говорящего Белого Кролика с часами и падает в глубокую нору, где начинается Страна чудес.</p>
+          <div class="grammar-pill">🎧 Listening · Vocabulary · Speaking</div>
+        </div>
+        <a href="part-1/" class="btn btn-primary">Открыть Part 1 →</a>
+      </article>
+
+      <!-- Part 2 -->
+      <article class="card active">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 2</span>
+            <span class="badge open">Готово · Open</span>
+          </div>
+          <h3>The Pool of Tears</h3>
+          <p>Алиса то растёт до потолка, то уменьшается — и плачет целое море слёз, в котором сама же и плывёт.</p>
+          <div class="grammar-pill">🎧 Listening · Vocabulary · Speaking</div>
+        </div>
+        <a href="part-2/" class="btn btn-primary">Открыть Part 2 →</a>
+      </article>
+
+      <!-- Part 3 -->
+      <article class="card active">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 3</span>
+            <span class="badge open">Готово · Open</span>
+          </div>
+          <h3>The Caucus-race</h3>
+          <p>Странный забег без правил, в котором побеждают все, а призы раздаёт сама Алиса.</p>
+          <div class="grammar-pill">🎓 Grammar: First Conditional</div>
+        </div>
+        <a href="part-3/" class="btn btn-primary">Открыть Part 3 →</a>
+      </article>
+
+      <!-- Part 4 -->
+      <article class="card locked">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 4</span>
+            <span class="badge soon">Скоро · Coming soon</span>
+          </div>
+          <h3>The White Rabbit's House</h3>
+          <p>Алиса снова вырастает так сильно, что заполняет собой целый дом Белого Кролика.</p>
+        </div>
+        <span class="btn btn-disabled">В разработке 🔒</span>
+      </article>
+
+      <!-- Part 5 -->
+      <article class="card locked">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 5</span>
+            <span class="badge soon">Скоро · Coming soon</span>
+          </div>
+          <h3>Advice from a Caterpillar</h3>
+          <p>Знакомство с загадочной Гусеницей и секрет волшебного гриба, меняющего рост.</p>
+        </div>
+        <span class="btn btn-disabled">В разработке 🔒</span>
+      </article>
+
+      <!-- Part 6 -->
+      <article class="card locked">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 6</span>
+            <span class="badge soon">Скоро · Coming soon</span>
+          </div>
+          <h3>Pig and Pepper</h3>
+          <p>Переполох на кухне Герцогини и первая встреча с улыбающимся Чеширским Котом.</p>
+        </div>
+        <span class="btn btn-disabled">В разработке 🔒</span>
+      </article>
+
+      <!-- Part 7 -->
+      <article class="card locked">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 7</span>
+            <span class="badge soon">Скоро · Coming soon</span>
+          </div>
+          <h3>A Mad Tea-Party</h3>
+          <p>Безумное чаепитие со Шляпником и Мартовским Зайцем, где время всегда застыло на шести часах.</p>
+        </div>
+        <span class="btn btn-disabled">В разработке 🔒</span>
+      </article>
+
+      <!-- Part 8 -->
+      <article class="card locked">
+        <div>
+          <div class="card-top">
+            <span class="part-num">Part 8</span>
+            <span class="badge soon">Скоро · Coming soon</span>
+          </div>
+          <h3>Croquet with the Queen</h3>
