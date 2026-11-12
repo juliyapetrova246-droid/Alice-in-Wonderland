@@ -5,21 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alice in Wonderland · Interactive English Lab</title>
   <style>
-    :root {
-      --bg-parchment: #f7f3e8;
-      --bg-parchment-dark: #ede5d2;
-      --card-bg: #fffdf9;
-      --royal-emerald: #1b4332;
-      --royal-emerald-hover: #122e22;
-      --burgundy: #7f1d1d;
-      --gold: #b45309;
-      --gold-light: #fef3c7;
-      --gold-border: #d97706;
-      --ink-main: #1f2937;
-      --ink-muted: #57534e;
-      --border-classic: #d6cbb5;
-    }
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -28,12 +13,11 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-parchment);
+      background-color: #f7f3e8;
       background-image: 
-        radial-gradient(circle at 15% 20%, rgba(217, 119, 6, 0.06) 0%, transparent 45%),
-        radial-gradient(circle at 85% 80%, rgba(27, 67, 50, 0.07) 0%, transparent 45%),
-        repeating-linear-gradient(0deg, rgba(180, 160, 130, 0.04) 0px, rgba(180, 160, 130, 0.04) 1px, transparent 1px, transparent 4px);
-      color: var(--ink-main);
+        radial-gradient(circle at 15% 20%, rgba(217, 119, 6, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(27, 67, 50, 0.08) 0%, transparent 45%);
+      color: #1f2937;
       line-height: 1.6;
       min-height: 100vh;
       padding: 28px 16px 60px;
@@ -43,44 +27,40 @@
 
     .floating-suits {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       pointer-events: none;
       z-index: 0;
-      overflow: hidden;
     }
 
     .suit-item {
       position: absolute;
       font-size: 1.8rem;
-      opacity: 0.08;
-      animation: floatSlow 18s infinite ease-in-out;
+      opacity: 0.09;
+      animation: floatSlow 16s infinite ease-in-out;
       user-select: none;
     }
 
     @keyframes floatSlow {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-22px) rotate(12deg); }
+      50% { transform: translateY(-20px) rotate(10deg); }
     }
 
     .container {
       max-width: 1040px;
       margin: 0 auto;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
     .hero {
-      background: var(--card-bg);
+      background: #fffdf9;
       border-radius: 22px;
-      padding: 42px 32px;
+      padding: 40px 30px;
       text-align: center;
-      box-shadow: 0 14px 35px rgba(45, 35, 20, 0.08);
-      border: 2px solid var(--border-classic);
+      box-shadow: 0 14px 35px rgba(45, 35, 20, 0.09);
+      border: 2px solid #d6cbb5;
       position: relative;
-      margin-bottom: 32px;
+      margin-bottom: 30px;
     }
 
     .hero::before {
@@ -95,28 +75,27 @@
     .ornament {
       font-size: 1.35rem;
       letter-spacing: 0.55rem;
-      color: var(--royal-emerald);
-      margin-bottom: 14px;
+      color: #1b4332;
+      margin-bottom: 12px;
     }
 
     .ornament .red {
-      color: var(--burgundy);
+      color: #7f1d1d;
     }
 
     .hero h1 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: 2.45rem;
+      font-size: 2.4rem;
       font-weight: 700;
-      color: var(--royal-emerald);
+      color: #1b4332;
       margin-bottom: 12px;
-      letter-spacing: -0.01em;
     }
 
     .hero .subtitle {
-      font-size: 1.08rem;
-      color: var(--ink-muted);
+      font-size: 1.06rem;
+      color: #57534e;
       max-width: 700px;
-      margin: 0 auto 24px;
+      margin: 0 auto 22px;
     }
 
     .tags {
@@ -124,23 +103,22 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 26px;
+      margin-bottom: 24px;
     }
 
     .tag {
-      background: var(--bg-parchment);
-      border: 1px solid var(--border-classic);
-      padding: 6px 15px;
+      background: #f7f3e8;
+      border: 1px solid #d6cbb5;
+      padding: 6px 14px;
       border-radius: 999px;
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       font-weight: 600;
       color: #3f3a34;
     }
 
     .quote-box {
-      background: linear-gradient(to right, #fdfbf7, #f8f2e4, #fdfbf7);
-      border-top: 1px solid var(--border-classic);
-      border-bottom: 1px solid var(--border-classic);
+      background: #faf5e8;
+      border: 1px solid #e2d8c3;
       padding: 16px 20px;
       max-width: 680px;
       margin: 0 auto;
@@ -151,14 +129,14 @@
       font-family: Georgia, serif;
       font-style: italic;
       font-size: 1.08rem;
-      color: var(--burgundy);
+      color: #7f1d1d;
       margin-bottom: 4px;
     }
 
     .quote-ru {
       font-size: 0.9rem;
-      color: var(--ink-muted);
-      margin-bottom: 10px;
+      color: #57534e;
+      margin-bottom: 12px;
     }
 
     .quote-actions {
@@ -170,24 +148,23 @@
 
     .mini-btn {
       background: #ffffff;
-      border: 1px solid var(--border-classic);
-      color: var(--ink-main);
-      padding: 5px 12px;
+      border: 1px solid #d6cbb5;
+      color: #1f2937;
+      padding: 6px 13px;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.83rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
     .mini-btn:hover {
-      border-color: var(--gold-border);
-      background: var(--gold-light);
+      border-color: #d97706;
+      background: #fef3c7;
     }
 
     .controls-bar {
-      background: var(--card-bg);
-      border: 1px solid var(--border-classic);
+      background: #fffdf9;
+      border: 1px solid #d6cbb5;
       border-radius: 16px;
       padding: 18px 24px;
       margin-bottom: 26px;
@@ -196,7 +173,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      box-shadow: 0 4px 14px rgba(45, 35, 20, 0.04);
+      box-shadow: 0 4px 14px rgba(45, 35, 20, 0.05);
     }
 
     .progress-wrap {
@@ -209,13 +186,13 @@
       justify-content: space-between;
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--royal-emerald);
+      color: #1b4332;
       margin-bottom: 6px;
     }
 
     .progress-track {
       height: 10px;
-      background: var(--bg-parchment-dark);
+      background: #ede5d2;
       border-radius: 999px;
       overflow: hidden;
     }
@@ -223,7 +200,7 @@
     .progress-fill {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, var(--royal-emerald), var(--gold-border));
+      background: linear-gradient(90deg, #1b4332, #d97706);
       border-radius: 999px;
       transition: width 0.4s ease;
     }
@@ -235,21 +212,20 @@
     }
 
     .tab-btn {
-      background: var(--bg-parchment);
-      border: 1px solid var(--border-classic);
+      background: #f7f3e8;
+      border: 1px solid #d6cbb5;
       padding: 8px 14px;
       border-radius: 10px;
       font-size: 0.88rem;
       font-weight: 600;
-      color: var(--ink-muted);
+      color: #57534e;
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
     .tab-btn.active {
-      background: var(--royal-emerald);
+      background: #1b4332;
       color: #ffffff;
-      border-color: var(--royal-emerald);
+      border-color: #1b4332;
     }
 
     .episodes-grid {
@@ -259,32 +235,31 @@
     }
 
     .card {
-      background: var(--card-bg);
+      background: #fffdf9;
       border-radius: 18px;
       padding: 24px;
-      border: 1px solid var(--border-classic);
+      border: 1px solid #d6cbb5;
       box-shadow: 0 6px 18px rgba(45, 35, 20, 0.05);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .card.active:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
       box-shadow: 0 14px 28px rgba(180, 83, 9, 0.14);
-      border-color: var(--gold-border);
+      border-color: #d97706;
     }
 
     .card.locked {
       background: #f4efe4;
-      opacity: 0.82;
+      opacity: 0.85;
     }
 
     .card.completed {
-      border-color: var(--royal-emerald);
-      background: linear-gradient(to bottom, #f4fbf7, #fffdf9);
+      border-color: #1b4332;
+      background: #f4fbf7;
     }
 
     .card-top {
@@ -296,10 +271,9 @@
 
     .chapter-tag {
       font-family: Georgia, serif;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
-      color: var(--burgundy);
-      letter-spacing: 0.04em;
+      color: #7f1d1d;
     }
 
     .badge {
@@ -327,7 +301,7 @@
 
     .card h3 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: 1.28rem;
+      font-size: 1.26rem;
       font-weight: 700;
       color: #1c1917;
       margin-bottom: 8px;
@@ -335,14 +309,14 @@
 
     .card p {
       font-size: 0.94rem;
-      color: var(--ink-muted);
+      color: #57534e;
       margin-bottom: 16px;
     }
 
     .grammar-pill {
       display: inline-block;
       font-size: 0.8rem;
-      background: var(--gold-light);
+      background: #fef3c7;
       color: #92400e;
       border: 1px solid #fde68a;
       padding: 4px 11px;
@@ -366,41 +340,32 @@
       font-weight: 700;
       font-size: 0.95rem;
       text-decoration: none;
-      transition: background 0.2s ease, transform 0.15s ease;
     }
 
     .btn-primary {
-      background: var(--royal-emerald);
+      background: #1b4332;
       color: #ffffff;
-      box-shadow: 0 4px 10px rgba(27, 67, 50, 0.2);
     }
 
     .btn-primary:hover {
-      background: var(--royal-emerald-hover);
+      background: #122e22;
     }
 
     .btn-disabled {
       background: #e5dec9;
       color: #8c8273;
-      cursor: not-allowed;
       pointer-events: none;
     }
 
     .done-toggle {
       background: transparent;
-      border: 1px dashed var(--border-classic);
-      color: var(--ink-muted);
+      border: 1px dashed #d6cbb5;
+      color: #57534e;
       padding: 7px;
       border-radius: 9px;
       font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .done-toggle:hover {
-      border-color: var(--royal-emerald);
-      color: var(--royal-emerald);
     }
 
     .card.completed .done-toggle {
@@ -412,20 +377,58 @@
 
     footer {
       text-align: center;
-      margin-top: 52px;
+      margin-top: 48px;
       padding-top: 20px;
-      border-top: 1px solid var(--border-classic);
+      border-top: 1px solid #d6cbb5;
       font-size: 0.9rem;
-      color: var(--ink-muted);
+      color: #57534e;
     }
 
     @media (max-width: 640px) {
       .hero h1 { font-size: 1.8rem; }
-      .hero { padding: 30px 18px; }
+      .hero { padding: 28px 18px; }
     }
   </style>
 </head>
 <body>
   <div class="floating-suits" aria-hidden="true">
-    <div class="suit-item" style="top: 8%; left: 6%; animation-delay: 0s;">♠</div>
-    <div class="suit-item" style="top: 18%; right: 8%; color: #7f1d1d; animation-delay: 3s;">♥</div>
+    <div class="suit-item" style="top: 8%; left: 6%;">♠</div>
+    <div class="suit-item" style="top: 18%; right: 8%; color: #7f1d1d;">♥</div>
+    <div class="suit-item" style="top: 48%; left: 4%;">♣</div>
+    <div class="suit-item" style="top: 65%; right: 5%; color: #7f1d1d;">♦</div>
+    <div class="suit-item" style="top: 82%; left: 12%;">🗝️</div>
+    <div class="suit-item" style="top: 35%; right: 14%;">🕰️</div>
+  </div>
+
+  <div class="container">
+    <header class="hero">
+      <div class="ornament">♠ <span class="red">♥</span> ♣ <span class="red">♦</span></div>
+      <h1>Alice in Wonderland · Interactive Lab</h1>
+      <p class="subtitle">
+        Волшебная языковая лаборатория по аудиодраме BBC Learning English. 
+        Погружайся в сюжет, слушай голоса британских актёров, открывай секреты грамматики и озвучивай героев Страны чудес!
+      </p>
+      <div class="tags">
+        <span class="tag">🎧 Оригинальные голоса BBC</span>
+        <span class="tag">📖 10 глав приключения</span>
+        <span class="tag">🎓 Grammar Studio</span>
+        <span class="tag">🎙 Запись голоса & Shadowing</span>
+        <span class="tag">🇷🇺 Подсказки на русском</span>
+      </div>
+
+      <div class="quote-box">
+        <div class="quote-en" id="quoteEn">“Curiouser and curiouser!”</div>
+        <div class="quote-ru" id="quoteRu">«Всё страньше и страньше!» — Алиса</div>
+        <div class="quote-actions">
+          <button class="mini-btn" onclick="speakQuote()">🔊 Послушать фразу</button>
+          <button class="mini-btn" onclick="nextQuote()">✨ Другая цитата из книги</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="controls-bar">
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>🗝️ Прогресс путешествия по Стране чудес</span>
+          <span id="progressText">0 из 10 глав пройдено</span>
+        </div>
