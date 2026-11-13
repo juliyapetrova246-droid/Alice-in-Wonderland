@@ -4,10 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alice’s Adventures in Wonderland · Interactive Storybook</title>
-  <link rel="preconnect" href="https://googleapis.com">
-  <link rel="preconnect" href="https://gstatic.com" crossorigin>
-  <link href="https://googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
+
     :root {
       --bg-room: radial-gradient(circle at 50% 35%, #2b1d38 0%, #120b1c 65%, #07040c 100%);
       --cover-leather: linear-gradient(135deg, #163a2c 0%, #0d261c 50%, #1b112c 100%);
@@ -366,3 +367,445 @@
     }
 
     .skills-box {
+      background: rgba(22, 66, 50, 0.055);
+      border: 1px solid rgba(158, 115, 40, 0.4);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.92rem;
+      text-align: left;
+    }
+    .skills-box h4 {
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--emerald);
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .skills-box .wordline { margin: 3px 0; color: var(--ink-muted); }
+    .skills-box .wordline b { color: var(--crimson); }
+    .lab-chip {
+      display: inline-block; margin-top: 9px; padding: 5px 13px;
+      background: var(--emerald); color: var(--gold-bright);
+      border-radius: 999px; font-size: 0.8rem; text-decoration: none;
+      border: 1px solid var(--gold-dark); letter-spacing: 0.04em;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .lab-chip:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(22,66,50,.35); }
+
+    /* ===== 3D book engine ===== */
+    .book3d {
+      display: none;
+      position: relative;
+      width: 100%;
+      max-width: 920px;
+      height: 620px;
+      margin: 0 auto;
+      transform-style: preserve-3d;
+    }
+    .book3d.open { display: block; animation: bookAppear 0.8s cubic-bezier(0.22,1,0.36,1); }
+    .leaf {
+      position: absolute; top: 0; left: 50%;
+      width: 50%; height: 100%;
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 1.05s cubic-bezier(0.3, 0.15, 0.25, 1);
+    }
+    .leaf.flipped { transform: rotateY(-180deg); }
+    .face {
+      position: absolute; inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      background: var(--page-paper);
+      background-image: radial-gradient(circle at center, #fffdf8 0%, #f3ead6 100%);
+      border: 3px solid #163a2c;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+    }
+    .face.front { border-radius: 4px 18px 18px 4px; padding: 30px 30px 22px 34px; }
+    .face.back  { transform: rotateY(180deg); border-radius: 18px 4px 4px 18px; padding: 30px 34px 22px 30px; }
+    .face.coverface {
+      background: var(--cover-leather);
+      border: 3px solid var(--gold-dark);
+      display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+      text-align: center; padding: 26px 20px;
+    }
+    .pagebase {
+      position: absolute; top: 0; width: 50%; height: 100%;
+      background: #efe5cd;
+      background-image: repeating-linear-gradient(45deg, rgba(139,115,85,.05) 0 12px, transparent 12px 24px);
+      border: 3px solid #163a2c;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.5);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-dark); font-family: 'Great Vibes', cursive; font-size: 1.5rem;
+    }
+    .pagebase.left  { left: 0; border-radius: 18px 4px 4px 18px; }
+    .pagebase.right { left: 50%; border-radius: 4px 18px 18px 4px; }
+    .facetext { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+    .facetext.centered { align-items: center; text-align: center; }
+    .book-nav {
+      display: none; gap: 10px; align-items: center; justify-content: center;
+      margin-top: 16px; flex-wrap: wrap; z-index: 3; position: relative;
+    }
+    .book-nav.visible { display: flex; }
+    .spread-counter { font-family: 'Cinzel Decorative', serif; color: var(--gold-foil); font-size: .85rem; letter-spacing: .1em; min-width: 120px; text-align: center; }
+    .goldbtn {
+      background: linear-gradient(135deg, #e6c27a 0%, #b5852a 100%);
+      color: #140d07; border: 1px solid #fff3c4; border-radius: 999px;
+      padding: 9px 22px; font-family: 'Cinzel Decorative', serif; font-weight: 700;
+      font-size: .85rem; cursor: pointer; letter-spacing: .05em;
+      box-shadow: 0 6px 16px rgba(0,0,0,.5); transition: transform .2s, box-shadow .2s;
+    }
+    .goldbtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255,217,125,.55); }
+    .goldbtn:disabled { opacity: .4; cursor: default; }
+    .cover-open-anim { animation: coverSwing 1s cubic-bezier(0.3,0.1,0.3,1) forwards; transform-origin: left center; }
+    @keyframes coverSwing { to { transform: perspective(1600px) rotateY(-105deg); opacity: 0; } }
+    .toc-item { margin: 7px 0; font-size: .98rem; color: var(--ink-dark); cursor: pointer; }
+    .toc-item:hover { color: var(--crimson); }
+    .toc-item .toc-num { font-family: 'Cinzel Decorative', serif; color: var(--crimson); margin-right: 8px; }
+    .big-letter { font-family: 'Cinzel Decorative', serif; font-size: 3.6rem; color: var(--gold-dark); text-shadow: 0 2px 6px rgba(0,0,0,.25); }
+    @media (max-width: 760px) {
+      .book3d { height: 560px; }
+      .face.front, .face.back { padding: 16px 13px 12px 15px; }
+      .chapter-heading { font-size: 1.45rem; }
+      .story-synopsis { font-size: .82rem; }
+      .illustration-frame { height: 150px; }
+      .skills-box { font-size: .74rem; padding: 8px 10px; }
+      .quote-caption { font-size: .95rem; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="wonderland-sky" id="sky"></div>
+
+  <header class="cinema-header">
+    <div class="brand-mark">✦ ALICE’S ADVENTURES IN WONDERLAND ✦</div>
+    <nav class="nav-pills">
+      <a class="top-pill-btn" href="https://alice-wonderland-a2.shareyourhtml.com" target="_blank" rel="noopener" style="text-decoration:none">🎧 Lab · Part 1</a>
+      <a class="top-pill-btn" href="https://alice-wonderland-a2-ep2.shareyourhtml.com" target="_blank" rel="noopener" style="text-decoration:none">🎧 Lab · Part 2</a>
+      <a class="top-pill-btn" href="https://alice-wonderland-a2-ep3.shareyourhtml.com" target="_blank" rel="noopener" style="text-decoration:none">🎧 Lab · Part 3</a>
+    </nav>
+  </header>
+
+  <main class="book-stage">
+    <div class="book-cover-view" id="coverView">
+      <div class="gold-frame">
+        <div class="flourish-top">Lewis Carroll</div>
+        <div class="cover-title">Alice’s Adventures<br>in Wonderland</div>
+        <div class="cover-script">✦ a story that never grows old ✦</div>
+        <div class="cover-emblem"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<circle cx="150" cy="120" r="92" fill="none" stroke="#e6c27a" stroke-width="3"/>
+<circle cx="150" cy="120" r="80" fill="none" stroke="#ffd97d" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="150" y="152" text-anchor="middle" font-family="Cinzel Decorative, serif" font-size="86" font-weight="900" fill="#ffd97d">A</text>
+<g stroke="#e6c27a" stroke-width="4" fill="none" stroke-linecap="round">
+  <path d="M96 62 q54 -30 108 0"/><path d="M96 178 q54 30 108 0"/>
+</g>
+<g fill="#ffd97d"><circle cx="150" cy="26" r="4"/><circle cx="150" cy="214" r="4"/></g>
+<g stroke="#e6c27a" stroke-width="3" fill="none"><path d="M60 120 h-22 M240 120 h22"/><circle cx="34" cy="120" r="5"/><circle cx="266" cy="120" r="5"/></g>
+</svg></div>
+        <button class="open-book-btn" id="openBtn">Open the Book 🗝️</button>
+      </div>
+    </div>
+
+    <div class="book3d" id="book3d">
+      <div class="pagebase left">♠ ♥ ♣ ♦</div>
+      <div class="pagebase right">♦ ♣ ♥ ♠</div>
+<div class="leaf" id="leaf0"><div class="face front coverface"><div class="flourish-top">Lewis Carroll</div>
+        <div class="cover-title">Alice’s Adventures<br>in Wonderland</div>
+        <div class="cover-script">✦ a story that never grows old ✦</div>
+        <div class="cover-emblem"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<circle cx="150" cy="120" r="92" fill="none" stroke="#e6c27a" stroke-width="3"/>
+<circle cx="150" cy="120" r="80" fill="none" stroke="#ffd97d" stroke-width="1" stroke-dasharray="4 5"/>
+<text x="150" y="152" text-anchor="middle" font-family="Cinzel Decorative, serif" font-size="86" font-weight="900" fill="#ffd97d">A</text>
+<g stroke="#e6c27a" stroke-width="4" fill="none" stroke-linecap="round">
+  <path d="M96 62 q54 -30 108 0"/><path d="M96 178 q54 30 108 0"/>
+</g>
+<g fill="#ffd97d"><circle cx="150" cy="26" r="4"/><circle cx="150" cy="214" r="4"/></g>
+<g stroke="#e6c27a" stroke-width="3" fill="none"><path d="M60 120 h-22 M240 120 h22"/><circle cx="34" cy="120" r="5"/><circle cx="266" cy="120" r="5"/></g>
+</svg></div>
+        <div style="font-family:'Great Vibes',cursive;color:var(--gold-bright);font-size:1.1rem">turn me ✦</div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">❦ ❦ ❦</div>
+        <div class="big-letter">A</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--emerald);font-weight:700">Alice’s Adventures<br>in Wonderland</div>
+        <div style="font-family:'Great Vibes',cursive;color:var(--gold-dark);font-size:1.25rem">Lewis Carroll · 1865</div>
+        <div style="font-size:.85rem;color:var(--ink-muted);max-width:230px">An interactive storybook for young readers — with real BBC voices waiting in the labs behind every chapter.</div>
+        <div class="page-number">— i —</div>
+      </div></div></div>
+<div class="leaf" id="leaf1"><div class="face front"><div class="facetext">
+        <div>
+          <div class="chapter-kicker">THE CONTENTS</div>
+          <h2 class="chapter-heading" style="font-size:1.7rem">What waits inside</h2>
+          <div class="toc-item" onclick="goSpread(2)"><span class="toc-num">I</span>Down the Rabbit-Hole</div>
+          <div class="toc-item" onclick="goSpread(3)"><span class="toc-num">II</span>The Pool of Tears</div>
+          <div class="toc-item" onclick="goSpread(4)"><span class="toc-num">III</span>A Caucus-Race and a Long Tale</div>
+          <div class="toc-item" onclick="goSpread(5)"><span class="toc-num">IV</span>The Rabbit Sends in a Little Bill</div>
+          <div class="toc-item" onclick="goSpread(6)"><span class="toc-num">VI</span>Pig and Pepper — the Cheshire Cat</div>
+          <div class="toc-item" onclick="goSpread(7)"><span class="toc-num">VII</span>A Mad Tea-Party</div>
+          <div class="toc-item" onclick="goSpread(8)"><span class="toc-num">✦</span>The End — and where to play on</div>
+        </div>
+        <div class="page-number" style="text-align:right">— ii —</div>
+      </div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">❦</div>
+        <div class="illustration-frame"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<rect x="0" y="0" width="300" height="240" fill="#fbf6ea"/>
+<ellipse cx="150" cy="30" rx="70" ry="16" fill="none" stroke="#9e7328" stroke-width="2"/>
+<path d="M80 30 C 70 120, 90 190, 150 226 C 210 190, 230 120, 220 30" fill="none" stroke="#9e7328" stroke-width="2" stroke-dasharray="5 6"/>
+<g stroke="#164232" stroke-width="2.4" fill="none" stroke-linecap="round">
+  <circle cx="138" cy="96" r="7"/><path d="M138 103 v20 m0 0 l-9 16 m9 -16 l9 16 m-16 -27 l14 7 m-14 -7 l-12 9"/>
+  <path d="M131 92 q-9 -12 -3 -18 M145 92 q9 -12 3 -18"/>
+</g>
+<g stroke="#8b1e24" stroke-width="2.2" fill="none" stroke-linecap="round">
+  <ellipse cx="182" cy="146" rx="13" ry="9"/><path d="M182 137 q-3 -12 1 -16 q4 -4 6 2 q2 8 -2 14 m-5 6 l-9 12 m9 -12 l10 10"/>
+  <circle cx="192" cy="150" r="5"/>
+</g>
+<g fill="#9e7328" opacity=".8"><rect x="96" y="52" width="14" height="18" rx="2"/><rect x="200" y="76" width="12" height="16" rx="2"/><rect x="110" y="170" width="16" height="12" rx="2"/></g>
+<text x="150" y="234" text-anchor="middle" font-family="Great Vibes, cursive" font-size="15" fill="#9e7328">down, down, down…</text>
+</svg></div>
+        <div class="quote-caption">“Oh dear! Oh dear! I shall be too late!”<br><span style="font-size:.85em;color:var(--ink-muted)">— the White Rabbit</span></div>
+        <div class="page-number">— 2 —</div>
+      </div></div></div>
+<div class="leaf" id="leaf2"><div class="face front"><div class="facetext">
+        <div>
+          <div class="chapter-kicker">CHAPTER I</div>
+          <h2 class="chapter-heading">Down the Rabbit-Hole</h2>
+          <p class="story-synopsis drop-cap">Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, “and what is the use of a book,” thought Alice “without pictures or conversations?” […] There was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, “Oh dear! Oh dear! I shall be late!” (when she thought it over afterwards, it occurred to her that she ought to have wondered at this, but at the time it all seemed quite natural); but when the Rabbit actually _took a watch out of its…</p>
+        </div>
+        <div>
+          <div class="skills-box"><h4>🗝 Words to treasure</h4><div class="wordline"><b>a rabbit-hole</b> — кроличья нора</div><div class="wordline"><b>curiosity</b> — любопытство</div><div class="wordline"><b>a waistcoat</b> — жилет</div><a class="lab-chip" href="https://alice-wonderland-a2.shareyourhtml.com" target="_blank" rel="noopener">🎧 Play BBC Lab · Part 1 ↗</a></div>
+          <div class="page-number" style="text-align:right;margin-top:8px">— 3 —</div>
+        </div>
+      </div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">❧</div>
+        <div class="illustration-frame"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<rect x="0" y="0" width="300" height="240" fill="#fbf6ea"/>
+<path d="M0 150 q 38 -14 75 0 t 75 0 t 75 0 t 75 0 v90 H0 Z" fill="#dcebf0" stroke="#164232" stroke-width="2"/>
+<path d="M0 150 q 38 -14 75 0 t 75 0 t 75 0 t 75 0" fill="none" stroke="#164232" stroke-width="2.4"/>
+<path d="M10 178 q 35 -10 70 0 t 70 0 t 70 0 t 70 0" fill="none" stroke="#164232" stroke-width="1.2" opacity=".6"/>
+<g stroke="#8b1e24" stroke-width="2.2" fill="none" stroke-linecap="round">
+  <circle cx="120" cy="108" r="8"/><path d="M120 116 v22 m0 0 l-10 18 m10 -18 l10 18 m-17 -30 l15 8 m-15 -8 l-13 10"/>
+  <path d="M113 104 q-8 -10 -2 -16 M127 104 q8 -10 2 -16"/>
+</g>
+<g fill="#164232"><path d="M186 158 q 14 -10 30 -2 q 8 4 14 12 q -12 6 -26 4 q -12 -2 -18 -14 Z"/><circle cx="222" cy="158" r="2.6" fill="#fbf6ea"/><path d="M188 160 q -8 10 -16 12" stroke="#164232" stroke-width="2" fill="none"/></g>
+<g fill="#7fb2c9" opacity=".85"><path d="M96 60 q 6 10 0 16 q -6 -6 0 -16 Z"/><path d="M140 40 q 6 10 0 16 q -6 -6 0 -16 Z"/><path d="M180 66 q 6 10 0 16 q -6 -6 0 -16 Z"/></g>
+<text x="150" y="232" text-anchor="middle" font-family="Great Vibes, cursive" font-size="15" fill="#9e7328">a pool of her own tears</text>
+</svg></div>
+        <div class="quote-caption">“Curiouser and curiouser!”<br><span style="font-size:.85em;color:var(--ink-muted)">— Alice</span></div>
+        <div class="page-number">— 4 —</div>
+      </div></div></div>
+<div class="leaf" id="leaf3"><div class="face front"><div class="facetext">
+        <div>
+          <div class="chapter-kicker">CHAPTER II</div>
+          <h2 class="chapter-heading">The Pool of Tears</h2>
+          <p class="story-synopsis drop-cap">“Curiouser and curiouser!” cried Alice (she was so much surprised, that for the moment she quite forgot how to speak good English); “now I’m opening out like the largest telescope that ever was! Good-bye, feet!” (for when she looked down at her feet, they seemed to be almost out of sight, they were getting so far off). “Oh, my poor little feet, I wonder who will put on your shoes and stockings for you now, dears? I’m sure I shan’t be able! I shall be a great deal too far off to trouble myself about you: you must manage the best way you can;—but I must be kind to them,” thought Alice, “or perhaps they won’t walk the way I…</p>
+        </div>
+        <div>
+          <div class="skills-box"><h4>🗝 Words to treasure</h4><div class="wordline"><b>tears</b> — слёзы</div><div class="wordline"><b>to shrink</b> — уменьшаться</div><div class="wordline"><b>a fan</b> — веер</div><a class="lab-chip" href="https://alice-wonderland-a2-ep2.shareyourhtml.com" target="_blank" rel="noopener">🎧 Play BBC Lab · Part 2 ↗</a></div>
+          <div class="page-number" style="text-align:right;margin-top:8px">— 5 —</div>
+        </div>
+      </div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">❦</div>
+        <div class="illustration-frame"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<rect x="0" y="0" width="300" height="240" fill="#fbf6ea"/>
+<ellipse cx="150" cy="140" rx="105" ry="58" fill="none" stroke="#9e7328" stroke-width="2.4" stroke-dasharray="9 7"/>
+<g stroke="#164232" stroke-width="2.2" fill="none" stroke-linecap="round">
+  <path d="M84 112 q 8 -20 22 -24 q 10 -2 12 8 q 1 8 -8 10 l -8 14 m -18 -8 l 10 4"/>
+  <circle cx="112" cy="94" r="3"/>
+  <path d="M206 106 q -6 -18 6 -26 q 10 -6 14 4 q 3 8 -6 12 l -4 14 m 8 -14 q 8 2 10 10"/>
+</g>
+<g stroke="#8b1e24" stroke-width="2.2" fill="none">
+  <path d="M150 168 q -12 -8 -8 -20 q 4 -10 16 -8 q 12 2 12 14 q 0 10 -10 14 Z"/>
+  <circle cx="156" cy="152" r="2.4" fill="#8b1e24"/><path d="M164 158 q 8 2 12 8"/>
+</g>
+<g fill="#9e7328"><circle cx="70" cy="150" r="5"/><circle cx="232" cy="146" r="5"/><circle cx="150" cy="70" r="5"/></g>
+<text x="150" y="228" text-anchor="middle" font-family="Great Vibes, cursive" font-size="15" fill="#9e7328">everybody has won!</text>
+</svg></div>
+        <div class="quote-caption">“Everybody has won, and all must have prizes!”<br><span style="font-size:.85em;color:var(--ink-muted)">— the Dodo</span></div>
+        <div class="page-number">— 6 —</div>
+      </div></div></div>
+<div class="leaf" id="leaf4"><div class="face front"><div class="facetext">
+        <div>
+          <div class="chapter-kicker">CHAPTER III</div>
+          <h2 class="chapter-heading">A Caucus-Race and a Long Tale</h2>
+          <p class="story-synopsis drop-cap">“Why,” said the Dodo, “the best way to explain it is to do it.” (And, as you might like to try the thing yourself, some winter day, I will tell you how the Dodo managed it.) […] This question the Dodo could not answer without a great deal of thought, and it sat for a long time with one finger pressed upon its forehead (the position in which you usually see Shakespeare, in the pictures of him), while the rest waited in silence. At last the Dodo said, “Everybody has won, and all must have prizes.”</p>
+        </div>
+        <div>
+          <div class="skills-box"><h4>🗝 Words to treasure</h4><div class="wordline"><b>a caucus-race</b> — странные догонялки</div><div class="wordline"><b>a dodo</b> — дронт</div><div class="wordline"><b>prizes</b> — призы</div><a class="lab-chip" href="https://alice-wonderland-a2-ep3.shareyourhtml.com" target="_blank" rel="noopener">🎧 Play BBC Lab · Part 3 ↗</a></div>
+          <div class="page-number" style="text-align:right;margin-top:8px">— 7 —</div>
+        </div>
+      </div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">❧</div>
+        <div class="illustration-frame"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<rect x="0" y="0" width="300" height="240" fill="#fbf6ea"/>
+<g stroke="#164232" stroke-width="2.4" fill="none">
+  <path d="M90 150 L150 96 L210 150 V210 H90 Z"/><path d="M132 210 v-38 h36 v38"/><path d="M104 164 h20 v20 h-20 Z M176 164 h20 v20 h-20 Z"/>
+  <path d="M186 96 v-30 h20 v44"/>
+</g>
+<g stroke="#8b1e24" stroke-width="2.2" fill="none" stroke-linecap="round">
+  <path d="M196 52 q 10 -8 18 2 q 6 8 -2 14 l -10 6 m -6 -22 l 2 -10 m 8 8 q 8 -6 12 0"/>
+  <circle cx="200" cy="58" r="2" fill="#8b1e24"/>
+</g>
+<g fill="#9e7328" opacity=".7"><path d="M60 210 h180" stroke="#9e7328" stroke-width="2"/><circle cx="66" cy="120" r="4"/><circle cx="240" cy="130" r="4"/></g>
+<text x="150" y="232" text-anchor="middle" font-family="Great Vibes, cursive" font-size="15" fill="#9e7328">there goes Bill!</text>
+</svg></div>
+        <div class="quote-caption">“There goes Bill up the chimney!”<br><span style="font-size:.85em;color:var(--ink-muted)">— the Rabbit</span></div>
+        <div class="page-number">— 8 —</div>
+      </div></div></div>
+<div class="leaf" id="leaf5"><div class="face front"><div class="facetext">
+        <div>
+          <div class="chapter-kicker">CHAPTER IV</div>
+          <h2 class="chapter-heading">The Rabbit Sends in a Little Bill</h2>
+          <p class="story-synopsis drop-cap">It was the White Rabbit, trotting slowly back again, and looking anxiously about as it went, as if it had lost something; and she heard it muttering to itself “The Duchess! The Duchess! Oh my dear paws! Oh my fur and whiskers! She’ll get me executed, as sure as ferrets are ferrets! Where can I have dropped them, I wonder?” Alice guessed in a moment that it was looking for the fan and the pair of white kid gloves, and she very good-naturedly began hunting about for them, but they were nowhere to be seen—everything seemed to have changed since her swim in the pool, and the great hall, with the glass table and the little door, had vanished completely.</p>
+        </div>
+        <div>
+          <div class="skills-box"><h4>🗝 Words to treasure</h4><div class="wordline"><b>a chimney</b> — дымоход</div><div class="wordline"><b>a lizard</b> — ящерица</div><div class="wordline"><b>to grow</b> — расти</div></div>
+          <div class="page-number" style="text-align:right;margin-top:8px">— 9 —</div>
+        </div>
+      </div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">❦</div>
+        <div class="illustration-frame"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<rect x="0" y="0" width="300" height="240" fill="#fbf6ea"/>
+<path d="M40 170 Q 150 120 260 170" stroke="#164232" stroke-width="6" fill="none" stroke-linecap="round"/>
+<path d="M60 176 q 10 22 4 40 M240 176 q -10 22 -4 40" stroke="#164232" stroke-width="2" fill="none"/>
+<g stroke="#8b1e24" stroke-width="2.6" fill="none" stroke-linecap="round">
+  <path d="M104 96 q 46 -34 92 0"/><path d="M112 96 q 38 26 76 0"/>
+  <path d="M128 68 l-8 -18 l 20 8 M172 68 l8 -18 l -20 8"/>
+</g>
+<g fill="#9e7328"><ellipse cx="130" cy="78" rx="6" ry="8"/><ellipse cx="170" cy="78" rx="6" ry="8"/><circle cx="130" cy="80" r="2.4" fill="#fbf6ea"/><circle cx="170" cy="80" r="2.4" fill="#fbf6ea"/></g>
+<g stroke="#9e7328" stroke-width="1.4" opacity=".8"><path d="M96 104 l-26 6 M96 110 l-26 14 M204 104 l26 6 M204 110 l26 14"/></g>
+<text x="150" y="234" text-anchor="middle" font-family="Great Vibes, cursive" font-size="15" fill="#9e7328">we’re all mad here</text>
+</svg></div>
+        <div class="quote-caption">“We’re all mad here. I’m mad. You’re mad.”<br><span style="font-size:.85em;color:var(--ink-muted)">— the Cheshire Cat</span></div>
+        <div class="page-number">— 10 —</div>
+      </div></div></div>
+<div class="leaf" id="leaf6"><div class="face front"><div class="facetext">
+        <div>
+          <div class="chapter-kicker">CHAPTER VI</div>
+          <h2 class="chapter-heading">Pig and Pepper</h2>
+          <p class="story-synopsis drop-cap">The Cat only grinned when it saw Alice. It looked good-natured, she thought: still it had very long claws and a great many teeth, so she felt that it ought to be treated with respect. […] “Cheshire Puss,” she began, rather timidly, as she did not at all know whether it would like the name: however, it only grinned a little wider. “Come, it’s pleased so far,” thought Alice, and she went on. “Would you tell me, please, which way I ought to go from here?” […] “Oh, you can’t help that,” said the Cat: “we’re all mad here. I’m mad. You’re mad.”</p>
+        </div>
+        <div>
+          <div class="skills-box"><h4>🗝 Words to treasure</h4><div class="wordline"><b>a grin</b> — ухмылка</div><div class="wordline"><b>to vanish</b> — исчезать</div><div class="wordline"><b>mad</b> — безумный</div></div>
+          <div class="page-number" style="text-align:right;margin-top:8px">— 11 —</div>
+        </div>
+      </div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">❧</div>
+        <div class="illustration-frame"><svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" role="img">
+<rect x="0" y="0" width="300" height="240" fill="#fbf6ea"/>
+<ellipse cx="150" cy="170" rx="110" ry="20" fill="none" stroke="#164232" stroke-width="2.4"/>
+<path d="M60 170 v14 M240 170 v14" stroke="#164232" stroke-width="2.4"/>
+<g stroke="#8b1e24" stroke-width="2.2" fill="none">
+  <path d="M108 150 h36 v14 q 0 8 -18 8 q -18 0 -18 -8 Z"/><path d="M144 152 q 10 2 8 10 q -2 6 -8 6"/>
+  <path d="M112 142 q 4 -6 0 -12 M126 142 q 4 -6 0 -12 M138 142 q 4 -6 0 -12" stroke="#9e7328"/>
+</g>
+<g stroke="#164232" stroke-width="2.2" fill="none">
+  <path d="M178 148 q 0 -26 22 -26 q 22 0 22 26 Z"/><path d="M172 148 h56"/><path d="M192 122 q 8 -14 16 0"/>
+</g>
+<g fill="#9e7328"><circle cx="86" cy="160" r="6"/><circle cx="230" cy="158" r="6"/><path d="M80 160 h12 M224 158 h12" stroke="#fbf6ea" stroke-width="1.6"/></g>
+<text x="150" y="228" text-anchor="middle" font-family="Great Vibes, cursive" font-size="15" fill="#9e7328">no room! no room!</text>
+</svg></div>
+        <div class="quote-caption">“No room! No room!”<br><span style="font-size:.85em;color:var(--ink-muted)">— the Hatter and the Hare</span></div>
+        <div class="page-number">— 12 —</div>
+      </div></div></div>
+<div class="leaf" id="leaf7"><div class="face front"><div class="facetext">
+        <div>
+          <div class="chapter-kicker">CHAPTER VII</div>
+          <h2 class="chapter-heading">A Mad Tea-Party</h2>
+          <p class="story-synopsis drop-cap">There was a table set out under a tree in front of the house, and the March Hare and the Hatter were having tea at it: a Dormouse was sitting between them, fast asleep, and the other two were using it as a cushion, resting their elbows on it, and talking over its head. “Very uncomfortable for the Dormouse,” thought Alice; “only, as it’s asleep, I suppose it doesn’t mind.” […] The table was a large one, but the three were all crowded together at one corner of it: “No room! No room!” they cried out when they saw Alice coming. “There’s plenty of room!” said Alice indignantly, and she sat down in a large arm-chair at one end of the table.</p>
+        </div>
+        <div>
+          <div class="skills-box"><h4>🗝 Words to treasure</h4><div class="wordline"><b>a tea-party</b> — чаепитие</div><div class="wordline"><b>a dormouse</b> — соня</div><div class="wordline"><b>a riddle</b> — загадка</div></div>
+          <div class="page-number" style="text-align:right;margin-top:8px">— 13 —</div>
+        </div>
+      </div></div><div class="face back"><div class="facetext centered">
+        <div class="page-ornament">✦ ✦ ✦</div>
+        <div class="chapter-heading" style="font-size:2.6rem;color:var(--gold-dark);font-family:'Cinzel Decorative',serif">The End</div>
+        <div style="font-size:.95rem;color:var(--ink-muted);max-width:260px">…but Wonderland never really ends. Keep playing, keep reading, keep asking <b>“curiouser and curiouser!”</b></div>
+        <div class="skills-box" style="max-width:300px"><h4>🎧 Play on — the BBC labs</h4>
+          <div class="wordline"><a href="https://alice-wonderland-a2.shareyourhtml.com" target="_blank" rel="noopener" style="color:var(--emerald)">Part 1 · Down the rabbit hole ↗</a></div>
+          <div class="wordline"><a href="https://alice-wonderland-a2-ep2.shareyourhtml.com" target="_blank" rel="noopener" style="color:var(--emerald)">Part 2 · The pool of tears ↗</a></div>
+          <div class="wordline"><a href="https://alice-wonderland-a2-ep3.shareyourhtml.com" target="_blank" rel="noopener" style="color:var(--emerald)">Part 3 · The Caucus-race ↗</a></div>
+        </div>
+        <div class="page-number">— 14 —</div>
+      </div></div></div>
+    </div>
+
+    <div class="book-nav" id="bookNav">
+      <button class="goldbtn" id="prevBtn">◀ Previous</button>
+      <div class="spread-counter" id="spreadCounter">Spread 1 of 8</div>
+      <button class="goldbtn" id="nextBtn">Next ▶</button>
+      <button class="goldbtn" id="closeBtn" style="background:linear-gradient(135deg,#164232,#0d261c);color:var(--gold-bright)">📕 Close the book</button>
+    </div>
+  </main>
+
+  <script>
+const LEAVES = document.querySelectorAll('.leaf');
+const N = LEAVES.length;              // 8 leaves -> 8 spreads when open
+let flipped = 0;                      // number of flipped leaves (cover counts)
+let isOpen = false;
+
+function zIndexes(){
+  LEAVES.forEach((lf,i)=>{ lf.style.zIndex = lf.classList.contains('flipped') ? (i+1) : (N-i); });
+}
+function counter(){
+  document.getElementById('spreadCounter').textContent = 'Spread ' + flipped + ' of ' + N;
+  document.getElementById('prevBtn').disabled = (flipped<=1);
+  document.getElementById('nextBtn').disabled = (flipped>=N);
+}
+function flipTo(k){                   // k = how many leaves should be flipped
+  k = Math.max(1, Math.min(N, k));
+  for(let i=0;i<N;i++){ LEAVES[i].classList.toggle('flipped', i<k); }
+  flipped = k; zIndexes(); counter();
+}
+function next(){ if(flipped<N) flipTo(flipped+1); }
+function prev(){ if(flipped>1) flipTo(flipped-1); }
+function goSpread(s){ flipTo(s); }
+function openBook(){
+  if(isOpen) return; isOpen = true;
+  const cv = document.getElementById('coverView');
+  cv.classList.add('cover-open-anim');
+  setTimeout(()=>{
+    cv.style.display='none';
+    document.getElementById('book3d').classList.add('open');
+    document.getElementById('bookNav').classList.add('visible');
+    flipTo(1);
+  }, 620);
+}
+function closeBook(){
+  isOpen=false;
+  document.getElementById('book3d').classList.remove('open');
+  document.getElementById('bookNav').classList.remove('visible');
+  const cv=document.getElementById('coverView');
+  cv.classList.remove('cover-open-anim'); cv.style.display='flex';
+  flipTo(0); flipped=0;
+  LEAVES.forEach(l=>l.classList.remove('flipped')); zIndexes();
+}
+document.addEventListener('keydown', e=>{
+  if(!isOpen) { if(e.key==='Enter') openBook(); return; }
+  if(e.key==='ArrowRight'||e.key===' ') next();
+  if(e.key==='ArrowLeft') prev();
+  if(e.key==='Escape') closeBook();
+});
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('openBtn').addEventListener('click', e=>{ e.stopPropagation(); openBook(); });
+  document.getElementById('coverView').addEventListener('click', openBook);
+  document.getElementById('nextBtn').addEventListener('click', next);
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('closeBtn').addEventListener('click', closeBook);
+  // floating relics
+  const sky=document.getElementById('sky');
+  const relics=['🗝','🐇','♠','♥','♣','♦','🍄','🫖','🦋','⚱','🎩','🃏'];
+  for(let i=0;i<14;i++){
+    const s=document.createElement('span');
+    s.className='floating-relic'; s.textContent=relics[i%relics.length];
+    s.style.left=(4+Math.random()*92)+'%';
+    s.style.top=(4+Math.random()*88)+'%';
+    s.style.fontSize=(16+Math.random()*26)+'px';
+    s.style.animationDelay=(Math.random()*12)+'s';
+    s.style.animationDuration=(9+Math.random()*9)+'s';
+    sky.appendChild(s);
+  }
+  zIndexes();
+});
+</script>
+</body>
+</html>
